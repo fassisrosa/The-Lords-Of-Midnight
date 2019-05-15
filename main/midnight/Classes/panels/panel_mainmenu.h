@@ -11,7 +11,9 @@ FORWARD_REFERENCE(uitextmenu);
 class panel_mainmenu : public uipanel
 {
 public:
-    
+	panel_mainmenu() {}
+	~panel_mainmenu() {}
+
     virtual bool init();
     
     CREATE_FUNC(panel_mainmenu);

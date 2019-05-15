@@ -30,4 +30,8 @@ public:
     
 protected:
 	bool initWithStory( storyinfo_t* stories );
+
+	uibookmenu() {}
+	~uibookmenu() {}
+	
 };

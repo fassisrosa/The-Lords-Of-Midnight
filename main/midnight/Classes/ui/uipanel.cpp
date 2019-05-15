@@ -25,6 +25,7 @@ uipanel::uipanel() :
     clickCallback(nullptr),
     eventCallback(nullptr),
     safeArea(nullptr),
+	i_help(nullptr),
     currentmode(MODE_NONE)
 {
 }
@@ -142,14 +143,18 @@ void uipanel::AreYouSure ( LPCSTR text, MXVoidCallback ok )
     popupWindow = uipopup::create( this, point(0,0), RES(600), text );
     popupWindow->retain();
     
-    popupWindow->onCancel = [&] {
-        CC_SAFE_RELEASE_NULL(popupWindow);
+    popupWindow->onCancel = [=] {
+		RUN_ON_UI_THREAD([=]() {
+			CC_SAFE_RELEASE_NULL(popupWindow);
+			});
     };
-    popupWindow->onOk = [&,ok] {
-        CC_SAFE_RELEASE_NULL(popupWindow);
-        if ( ok != nullptr ) {
-            RUN_EVENT(ok(););
-        }
+    popupWindow->onOk = [=] {
+		RUN_ON_UI_THREAD([=]() {
+			CC_SAFE_RELEASE_NULL(popupWindow);
+			if (ok != nullptr) {
+				RUN_EVENT(ok(););
+			}
+			});
     };
     popupWindow->Show();
     
@@ -262,11 +267,13 @@ void uipanel::popupHelpWindow ( helpid_t id, MXVoidCallback callback )
     help_window = uihelpwindow::create( this, id );
     help_window->retain();
     
-    help_window->Show( [&,callback] {
-        CC_SAFE_RELEASE_NULL( help_window );
-        help_visible = HELP_NONE;
-        if ( callback != nullptr )
-            callback();
+    help_window->Show( [=] {
+		RUN_ON_UI_THREAD([=] {
+			CC_SAFE_RELEASE_NULL(help_window);
+			help_visible = HELP_NONE;
+			if (callback != nullptr)
+				callback();
+			});
     });
     
 }

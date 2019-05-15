@@ -64,7 +64,7 @@ namespace tme {
         MXRESULT LoadDiscoveryMap ( const c_str& filename );
         MXRESULT SaveDiscoveryMap ( const c_str& filename );
         
-		void debug (LPCSTR format, ... );
+		static void debug (LPCSTR format, ... );
         
 		// tme::item
 		mxroutenode*	RouteNodeById(u32 id) ;
@@ -168,7 +168,7 @@ namespace tme {
     
 #ifdef MX_DEBUG
 #define MX_DEBUG_ON 1
-#define MXTRACE		CCLOG
+#define MXTRACE		mxengine::debug
 #else
 #define MXTRACE		if(0) printf
 #endif

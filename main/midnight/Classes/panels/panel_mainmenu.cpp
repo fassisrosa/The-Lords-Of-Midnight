@@ -76,11 +76,11 @@ bool panel_mainmenu::init()
     //
     // Menu
     //
-    menu = uitextmenu::create(RES(512), items, NUMELE(items) );
+    menu = uitextmenu::create(RES(512), items, NUMELE(items));
     uihelper::AddCenter(safeArea,menu);
     
     menu->setNotificationCallback ( [&](uinotificationinterface* s, uieventargs* e) {
-        this->OnMenuNotification( s, (menueventargs*)e );
+        this->OnMenuNotification( s, static_cast<menueventargs*>(e) );
     });
 
     //
@@ -208,7 +208,7 @@ void panel_mainmenu::OnUpdate()
 
 void panel_mainmenu::OnNewStory()
 {
-    storyid_t id = mr->startNewStory();
+    storyid_t const id = mr->startNewStory();
     
     // if the help window is shown, then we must wait
     // for the user to close it
@@ -239,13 +239,14 @@ void panel_mainmenu::OnContinueStory()
     uihelper::AddCenter(this,bookmenu);
  
     bookmenu->setNotificationCallback ( [&](uinotificationinterface* s, uieventargs* e) {
-        uibookmenu* menu = static_cast<uibookmenu*>(s);
-        menu->removeFromParent();
         
-        bookeventargs* event = static_cast<bookeventargs*>(e);
+        const bookeventargs* event = static_cast<bookeventargs*>(e);
         if ( event != nullptr ) { // null == cancelled
             mr->continueStory( event->id );
         }
+
+		bookmenu->removeFromParent();
+
     });
     
 }
@@ -262,18 +263,16 @@ void panel_mainmenu::OnEndStory()
     
     bookmenu->setLocalZOrder(ZORDER_POPUP);
     uihelper::AddCenter(this,bookmenu);
-    
-	auto mainmenu = this;
 
-    bookmenu->setNotificationCallback ( [&,mainmenu,bookmenu](uinotificationinterface* s, uieventargs* e) {
+    bookmenu->setNotificationCallback ( [=](uinotificationinterface* s, uieventargs* e) {
         
-        uibookmenu* menu = static_cast<uibookmenu*>(s);
-        menu->removeFromParent();
+		const bookeventargs* event = static_cast<bookeventargs*>(e);
+		if ( event != nullptr) {
+			deleteStory(event->id);
+		}
+
+		bookmenu->removeFromParent();
         
-        bookeventargs* event = static_cast<bookeventargs*>(e);
-        if ( event != nullptr ) { // null == cancelled
-            deleteStory( event->id );
-        }
     });
 }
 
@@ -287,7 +286,7 @@ void panel_mainmenu::deleteStory( storyid_t id )
 
 void panel_mainmenu::refreshStories( void )
 {
-    int count = mr->stories->stories_used();
+    const int count = mr->stories->stories_used();
     
     //storyid_t id =
     mr->stories->next_free_story();

@@ -462,14 +462,14 @@
     <ClCompile Include="..\Classes\models\selectmodel.cpp">
       <Filter>src\models</Filter>
     </ClCompile>
-    <ClCompile Include="Classes\ui\uishortcutkeys.cpp">
-      <Filter>src\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="Classes\landscaping\TunnelView.cpp">
+    <ClCompile Include="..\Classes\landscaping\TunnelView.cpp">
       <Filter>src\landscaping</Filter>
     </ClCompile>
-    <ClCompile Include="Classes\ui\characters\uigroupedlord.cpp">
+    <ClCompile Include="..\Classes\ui\characters\uigroupedlord.cpp">
       <Filter>src\ui\characters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ui\uishortcutkeys.cpp">
+      <Filter>src\ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -802,5 +802,8 @@
     <ResourceCompile Include="game.rc">
       <Filter>resource</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

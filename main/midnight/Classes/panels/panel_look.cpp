@@ -383,7 +383,10 @@ void panel_look::getCharacterInfo ( defaultexport::character_t& c, locationinfo_
 
     info->lookingdowntunnel = m.flags.Is(lf_tunnel) && info->tunnel;
     info->lookingouttunnel = m.flags.Is(lf_tunnel_exit) && info->tunnel;
-    
+#else
+	info->tunnel = false;
+	info->lookingdowntunnel = false;
+	info->lookingouttunnel = false;
 #endif
 
     info->name = c.longname ;
@@ -466,11 +469,11 @@ void panel_look::setViewForCurrentCharacter ( void )
     options.isMoving = false;
     options.isLooking = false;
 
-#if defined(_DDR_)
+//#if defined(_DDR_)
     options.isInTunnel = current_info->tunnel;
     options.isLookingDownTunnel = current_info->lookingdowntunnel;
     options.isLookingOutTunnel = current_info->lookingouttunnel;
-#endif
+//#endif
 
     options.lookAmount = current_info->looking * LANDSCAPE_DIR_AMOUNT;
     if ( options.lookAmount >= LANDSCAPE_FULL_WIDTH )

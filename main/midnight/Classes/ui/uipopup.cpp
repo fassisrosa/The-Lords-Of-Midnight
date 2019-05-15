@@ -45,13 +45,11 @@ bool uipopup::initWithParent( Scene* parent, point pos, f32 width, LPCSTR text )
         return false;
     
     WidgetClickCallback callback = [&] (Ref* ref ) {
-        auto button = static_cast<Widget*>(ref);
+        auto const button = dynamic_cast<Widget*>(ref);
         if ( button == nullptr )
             return;
         
-        layoutid_t id = static_cast<layoutid_t>(button->getTag());
-        
-        switch ( id ) {
+        switch (static_cast<layoutid_t>(button->getTag())) {
             case ID_YES: OnYes(); break;
             case ID_NO: OnNo(); break;
             default: break;
@@ -59,7 +57,7 @@ bool uipopup::initWithParent( Scene* parent, point pos, f32 width, LPCSTR text )
         
     };
     
-    auto rect = parent->getBoundingBox();
+    auto const rect = parent->getBoundingBox();
     
     this->parent = parent;
     parent->retain();
@@ -164,16 +162,16 @@ void uipopup::Show()
 
 void uipopup::OnYes()
 {
-    Close();
-    if ( onOk!=nullptr )
-        onOk();
+	Close();
+	if (onOk != nullptr)
+		onOk();
 }
 
 void uipopup::OnNo()
 {
-    Close();
-    if ( onCancel!=nullptr )
-        onCancel();
+	Close();
+	if (onCancel != nullptr)
+		onCancel();
 }
 
 
