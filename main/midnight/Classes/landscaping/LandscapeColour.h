@@ -48,10 +48,10 @@ public:
 
 public:
     LandscapeOptions*   options;
-    
-protected:
     mxtime_t    timeofday;
 
+protected:
+   
     Color4B     startTint[MAX_SHADES];
     Color4B     endTint[MAX_SHADES];
 };

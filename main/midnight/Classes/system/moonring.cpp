@@ -29,6 +29,8 @@ static bool mySerialize ( u32 version, chilli::lib::archive& ar )
 }
 
 moonring::moonring()
+: glProgramStateNight(nullptr)
+, glProgramStateTerrain(nullptr)
 {
     help = new helpmanager();
     help->InjectMoonRing(this);
@@ -537,12 +539,23 @@ void moonring::initialise( progressmonitor* monitor )
     
     RUN_ON_UI_THREAD([=](){
         // load shader
+        
         auto p1 = GLProgram::createWithFilenames("terrain/standard.vsh", "terrain/dayNight.fsh");
-        glProgramState = GLProgramState::getOrCreateWithGLProgram( p1 );
-        glProgramState->setUniformVec4("p_left", Vec4(0,0,(165.0f/255.0f),alpha_normal));      // outline
-        glProgramState->setUniformVec4("p_right", Vec4(1,1,1,alpha_normal));               // body
-        glProgramState->setUniformFloat("p_alpha", alpha_normal);               // alpha
+        glProgramStateTerrain = GLProgramState::getOrCreateWithGLProgram( p1 );
+        glProgramStateTerrain->setUniformVec4("p_left", Vec4(0,0,(165.0f/255.0f),alpha_normal));      // outline
+        glProgramStateTerrain->setUniformVec4("p_right", Vec4(1,1,1,alpha_normal));               // body
+        glProgramStateTerrain->setUniformFloat("p_alpha", alpha_normal);               // alpha
+        
+        auto p2 = GLProgram::createWithFilenames("terrain/standard.vsh", "terrain/nightPerson.fsh");
+        glProgramStateNight = GLProgramState::getOrCreateWithGLProgram( p2 );
+        glProgramStateNight->setUniformVec4("p_right", Vec4(0,0,(100.0f/255.0f),alpha_normal));      // outline
+        glProgramStateNight->setUniformVec4("p_left", Vec4(0.01,0.01,0.01,alpha_normal));               // body
+        glProgramStateNight->setUniformFloat("p_alpha", alpha_normal);               // alpha
+        
         monitor->Update("Loaded Shader", 1);
+        
+        
+        
         
         std::lock_guard<std::mutex> guard(mutex);
         isDataLoaded = true;

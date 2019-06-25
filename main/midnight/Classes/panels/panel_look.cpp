@@ -113,7 +113,7 @@ bool panel_look::init()
     options.debugLand=false;
     options.isMoving=false;
     options.isLooking=false;
-    options.programState = mr->glProgramState;
+    options.programState = mr->glProgramStateTerrain;
     options.colour->options = &options;
 
     // Header area

@@ -10,6 +10,7 @@
 #include "LandscapePeople.h"
 #include "LandscapeColour.h"
 #include "ILandscape.h"
+#include "../system/moonring.h"
 #include "../system/resolutionmanager.h"
 #include "../system/tmemanager.h"
 #include "../ui/uihelper.h"
@@ -197,7 +198,13 @@ void LandscapePeople::add( std::string& person, int number /*, void* hotspot */ 
         
         image->setAnchorPoint(uihelper::AnchorBottomLeft);
         image->setPosition(x1, y1);
-        image->setColor(options->colour->GetPersonColour());
+        
+        if ( options->colour->timeofday == tme::variables::sv_time_night ) {
+            image->setGLProgramState(moonring::mikesingleton()->glProgramStateNight->clone());
+        }else{
+            //image->setGLProgramState(nullptr);
+            image->setColor(options->colour->GetPersonColour());
+        }
         addChild(image);
         
         //uihelper::AddBottomLeft(this, image, x1, y1);

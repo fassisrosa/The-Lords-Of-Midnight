@@ -121,7 +121,9 @@ public:
     c_str                   writeablepath;
     projectconfig*          project;
     
-    GLProgramState*         glProgramState;
+    GLProgramState*         glProgramStateTerrain;
+    GLProgramState*         glProgramStateNight;
+    
     GLProgram*              glShaderProgram;
     
     selectmodel             selectmodel;

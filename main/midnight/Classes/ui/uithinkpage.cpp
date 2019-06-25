@@ -262,7 +262,7 @@ bool uithinkpage::init()
     
     // Terrain Image
     imgTerrain = Sprite::create();
-    imgTerrain->setGLProgramState(mr->glProgramState->clone());
+    imgTerrain->setGLProgramState(mr->glProgramStateTerrain->clone());
     imgTerrain->setScale(1.0f);
     imgTerrain->setBlendFunc(cocos2d::BlendFunc::ALPHA_NON_PREMULTIPLIED);
     
