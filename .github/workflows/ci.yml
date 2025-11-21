@@ -11,7 +11,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        #os: [ubuntu-latest, windows-latest]
         os: [windows-latest]
         build-type: [Release]
     timeout-minutes: 30
@@ -20,38 +19,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install native deps (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential cmake ninja-build
-
-      - name: Configure (Linux - Ninja)
-        if: runner.os == 'Linux'
-        run: |
-          cmake -S . -B build -G "Ninja" -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
-
       - name: Configure (Windows - Visual Studio)
         if: runner.os == 'Windows'
+        shell: pwsh
         run: |
-          cd main\midnight
-          cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
-
-      - name: Build (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          cmake --build build --config ${{ matrix.build-type }} -- -j$(nproc)
+          #cd main\midnight
+          #$env:AX_ROOT = "${{ github.workspace }}\main\midnight"
+          #cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DTME=LOM -DAX_ROOT="$env:AX_ROOT" -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
+          cd main\midnight\build.win32\midnight
+          mkdir vs_project && cd vs_project
+          cmake ..\..\.. -G"Visual Studio 17 2022" -A Win32 -DTME:string=LOM
 
       - name: Build (Windows)
         if: runner.os == 'Windows'
         run: |
           cd main\midnight
           cmake --build build --config ${{ matrix.build-type }} -- /m
-
-      - name: Run tests (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          ctest --test-dir build --output-on-failure -C ${{ matrix.build-type }}
 
       - name: Run tests (Windows)
         if: runner.os == 'Windows'
