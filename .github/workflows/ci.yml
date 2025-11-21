@@ -34,6 +34,7 @@ jobs:
       - name: Configure (Windows - Visual Studio)
         if: runner.os == 'Windows'
         run: |
+          cd main\midnight
           cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
 
       - name: Build (Linux)
@@ -44,6 +45,7 @@ jobs:
       - name: Build (Windows)
         if: runner.os == 'Windows'
         run: |
+          cd main\midnight
           cmake --build build --config ${{ matrix.build-type }} -- /m
 
       - name: Run tests (Linux)
@@ -54,4 +56,5 @@ jobs:
       - name: Run tests (Windows)
         if: runner.os == 'Windows'
         run: |
+          cd main\midnight
           ctest --test-dir build -C ${{ matrix.build-type }} --output-on-failure
