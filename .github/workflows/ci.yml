@@ -26,6 +26,11 @@ jobs:
           #cd main\midnight
           #$env:AX_ROOT = "${{ github.workspace }}\main\midnight"
           #cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DTME=LOM -DAX_ROOT="$env:AX_ROOT" -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
+          git clone https://github.com/axmolengine/axmol
+          cd axmol
+          dir
+          .\setup.ps1
+          Write-Host "AX_ROOT = $env:AX_ROOT"
           cd main\midnight\build.win32\midnight
           mkdir vs_project && cd vs_project
           cmake ..\..\.. -G"Visual Studio 17 2022" -A Win32 -DTME:string=LOM
