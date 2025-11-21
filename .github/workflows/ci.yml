@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        build-type: [Release]
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install native deps (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build
+
+      - name: Configure (Linux - Ninja)
+        if: runner.os == 'Linux'
+        run: |
+          cmake -S . -B build -G "Ninja" -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
+
+      - name: Configure (Windows - Visual Studio)
+        if: runner.os == 'Windows'
+        run: |
+          cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
+
+      - name: Build (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          cmake --build build --config ${{ matrix.build-type }} -- -j$(nproc)
+
+      - name: Build (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          cmake --build build --config ${{ matrix.build-type }} -- /m
+
+      - name: Run tests (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          ctest --test-dir build --output-on-failure -C ${{ matrix.build-type }}
+
+      - name: Run tests (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          ctest --test-dir build -C ${{ matrix.build-type }} --output-on-failure
